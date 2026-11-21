@@ -1,1 +1,2 @@
 # Fundamentos-de-programacion-DSM01A
+El menu interactivo permite ejecutar diferentes sistemas, para ejecutar el deseado escribir la opcion que corresoponde a cada programa, el numero de opción será visible en el menu principal.
