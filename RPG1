@@ -1,0 +1,114 @@
+import random
+
+R = "\033[91m"
+V = "\033[92m"
+A = "\033[94m"
+AM = "\033[93m"
+RESET = "\033[0m"
+
+print("Welcome to the EPIC RPG BATTLE!")
+player1_name = input("Player 1, enter your name: ")
+player2_name = input("Player 2, enter your name: ")
+player1_health = 100
+player1_attack = 25
+player1_defense = 5
+player2_health = 100
+player2_attack = 25
+player2_defense = 5
+
+
+def calc_damage(attack, defense):
+  damage = attack - defense
+  if damage <= 0:
+    damage = 1
+  return damage
+
+def roll_dice():
+  return random.randint(1, 6)
+
+def print_player_status(player_name, player_health, player_attack, player_defense):
+    life_10 = player_health // 10
+    life_lost = 10 - life_10
+
+    health_bar = "█" * life_10 + "░" * life_lost
+
+    print("---", player_name, "Status ---")
+    print("❤️: [", health_bar, "]", player_health, "/100")
+    print("⚔️:", player_attack, "| 🛡️:", player_defense, "")
+
+roll_dice1 = 0
+roll_dice2 = 0
+roll_dice()
+while roll_dice1 == roll_dice2:
+  roll_dice1 = roll_dice()
+  roll_dice2 = roll_dice()
+  print(player1_name,"rolled a",roll_dice1)
+  print(player2_name, "rolled a" ,roll_dice2)
+
+  if roll_dice1 == roll_dice2:
+    print("It's a tie! rolling again...")
+
+  elif roll_dice1 > roll_dice2:
+    print(player1_name, "wins, attacks first")
+    turno = 1
+  else:
+    print(player2_name, "wins, attacks first")
+    turno = 2
+
+print_player_status(player1_name, player1_health, player1_attack, player1_defense)
+print_player_status(player2_name, player2_health, player2_attack, player2_defense)
+
+while player1_health > 0 and player2_health > 0:
+  if turno == 1:
+    player1_defense = 5
+    print("it´s ",player1_name,"'s turn")
+    option = input("Choose an option:1. Attack, 2.Heal, 3.Reinforced Shield: ")
+    if option == "1":
+      print(player1_name, "decides to attacks")
+      total_damage = calc_damage(player1_attack, player2_defense)
+      critical_hit = roll_dice()
+      if critical_hit == 6 or critical_hit == 3:
+        total_damage = total_damage * 2
+        print(R +"💥💥It´s a Critical hit!💥💥"+ RESET)
+      player2_health = player2_health - total_damage
+      print(R + player1_name, "attacks", player2_name, "for", total_damage, "damage" + RESET)
+    elif option == "2":
+      print(V + player1_name,"decide to heal and recover 10 HP" + RESET)
+      player1_health = player1_health + 10
+      if player1_health > 100:
+        player1_health = 100
+    elif option == "3":
+      print(A + player1_name,"has covered with the reinforced shield" + RESET)
+      player1_defense = 20
+    turno = 2
+
+  elif turno == 2:
+    player2_defense = 5
+    print("it´s ",player2_name,"'s turn")
+    option = input("Choose an option:1. Attack, 2.Heal, 3.Reinforced Shield): ")
+    if option == "1":
+      print(player2_name, "decides to attacks")
+      total_damage = calc_damage(player2_attack, player1_defense)
+      critical_hit = roll_dice()
+      if critical_hit == 6 or critical_hit == 3:
+        total_damage = total_damage * 2
+        print(R + "💥💥It´s a Critical hit!💥💥" + RESET)
+      player1_health = player1_health - total_damage
+      print(R + player2_name, "attacks", player1_name, "for", total_damage, "damage" + RESET)
+    elif option == "2":
+      print(V + player2_name,"decide to heal and recover 10 HP" + RESET)
+      player2_health = player2_health + 10
+      if player1_health > 100:
+        player1_health = 100
+    elif option == "3":
+      print(A + player2_name,"has covered with the reinforced shield" + RESET)
+      player2_defense = 20
+    turno = 1
+
+  print_player_status(player1_name, player1_health, player1_attack, player1_defense)
+  print_player_status(player2_name, player2_health, player2_attack, player2_defense)
+
+  if player1_health <= 0:
+    print(R + player1_name + "☠️has been defeated☠️" + RESET + V + player2_name + "🎉✨wins!✨🎉"+ RESET)
+  elif player2_health <= 0:
+    print(R + player2_name + "☠️has been defeated☠️" + RESET + V + player1_name + "🎉✨wins!✨🎉"+ RESET)
